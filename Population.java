@@ -5,7 +5,7 @@ public class Population
 	private int startSize;
 	public double INITIAL_INFECCTION_RATE = 0.001;
 	public double INFECTION_RISK = 0.2;
-	public static double MORTALITY = 0.01;
+	public static double MORTALITY = 0.001;
 	
 	Individual[] poparray;
 	
@@ -16,7 +16,7 @@ public class Population
 	
 	public Population(int startSize)
 	{
-		
+		this.startSize = startSize;
 		poparray  = new Individual[startSize];
 		
 		for(int i = 0;i<=poparray.length-1;i++)
@@ -24,14 +24,13 @@ public class Population
 			poparray[i] = new Individual(false);
 		}
 		
-		double initialinfection = startSize * INITIAL_INFECCTION_RATE;
+		int initialinfection = (int) (startSize * INITIAL_INFECCTION_RATE);
 		
 		
 		
-		for(int a = 0; a<=initialinfection;a++)
+		for(int a = 0; a<initialinfection;a++)
 		{
 			poparray[a].setInfected();
-			
 		}
 	}
 	
@@ -58,7 +57,7 @@ public class Population
 	public int getCurrentSize()
 	{
 		int amleben = 0;
-		for(int a = 0;a<=poparray.length-1;a++)
+		for(int a = 0;a<poparray.length;a++)
 		{
 			if(poparray[a].isAlive() == true)
 			{
@@ -78,7 +77,7 @@ public class Population
 		int amleben1 = 0;
 		for(int a = 0;a<=poparray.length-1;a++)
 		{
-			if(poparray[a].isAlive() == true & poparray[a].isInfected() == true)
+			if(this.poparray[a].isAlive() == true && this.poparray[a].isInfected() == true)
 			{
 				amleben1++;
 			}
@@ -88,11 +87,12 @@ public class Population
 	
 	public void simulateNextDay()
 	{
-		int randomcontact = (int)(Math.random()+poparray.length-1);
+		
 		for(int a = 0;a<=poparray.length-1;a++)
 		{
-			simulateContact(poparray[a], poparray[randomcontact]);
-			poparray[a].endOfDay();
+				int randomcontact = (int)(Math.random()*poparray.length);	
+				simulateContact(poparray[a], poparray[randomcontact]);
+				this.poparray[a].endOfDay();
 		}
 	}
 	
@@ -109,10 +109,18 @@ public class Population
 			{
 				if(a.isInfected() == true ^ b.isInfected() == true)
 				{
-					if(Math.random() < INFECTION_RISK)
+					if(Math.random() <= INFECTION_RISK)
 					{
-						a.setInfected();
-						b.setInfected();
+						//Änderung im vergleich zum vorherigen code
+						if(a.isInfected() == true)
+						{
+							b.setInfected();
+						}
+						
+						if(b.isInfected() == true)
+						{
+							a.setInfected();
+						}						
 					}
 					
 				}
