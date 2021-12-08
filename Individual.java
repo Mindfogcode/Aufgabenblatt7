@@ -6,8 +6,6 @@ public class Individual
 	private boolean alive;
 	private boolean infected;
 	private int remainingDaysOfInfection;
-	
-	
 	/**
 	 * 
 	 * @param infected create an object and decide if the individual is infected or not
@@ -17,9 +15,8 @@ public class Individual
 	{
 		
 		this.alive = true;
-		this.remainingDaysOfInfection = 0;
 		this.infected = infected;
-		
+		// this.remainingDaysOfInfection = 0 
 	}
 	
 	/**
@@ -42,31 +39,42 @@ public class Individual
 		return this.infected;
 	}
 	
+	
 	/**
 	 * sets the individual infected
 	 */
 	
+
+	
 	public void setInfected()
 	{
-		this.remainingDaysOfInfection = (int)(Math.random()*4)+5;
+		this.remainingDaysOfInfection = (int)(Math.random()*5)+5;
 		this.infected = true;
-		this.alive = true;
 	}
 	
 	public void endOfDay()
 	{
-		double mortal = Population.MORTALITY;
 		
-		if(Math.random() < mortal)
+		if(this.isInfected() == true)
+		{
+			if(Math.random() <= Population.MORTALITY)
 		{
 			this.alive = false;
 		}
 		
-		this.remainingDaysOfInfection -= 1;
-		
-		if(this.remainingDaysOfInfection == 0)
+		if(this.remainingDaysOfInfection > 0)
 		{
-			this.infected = false;
+			this.remainingDaysOfInfection -= 1;
+		
+			if(this.remainingDaysOfInfection == 0)
+			{
+				this.infected = false;
+			}
 		}
+
+		}
+		
+		
+		
 	}
 }
